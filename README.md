@@ -18,7 +18,7 @@ scrapy runspider scrapeTwitterProfile.py -a input_file=input/twitter.csv -a outp
 
 ##### To run the script for Twitter phrase tweets:
 
-python \<your input file> \<your output file>
+python scrapeTwitterPhrase.py \<your input file> \<your output file>
 
 For example:
 
