@@ -18,7 +18,7 @@ FIELD_NAMES = ['twitter_handle', 'twitter_url', 'timestamp', 'number_of_follower
 PREFIX = 'http://twitter.com/'
 
 
-# This class represents the spider which will be run by Scrapy to scrape the number of likes from Facebook pages.
+# This class represents the spider which will be run by Scrapy to scrape the number of followers from Twitter pages.
 class TwitterScraper(scrapy.Spider):
 	name = 'Twitter Scraper'
 
@@ -43,11 +43,14 @@ class TwitterScraper(scrapy.Spider):
 		self.urlHelper.process_urls_for_scrapy(self.csv_helper.get_input_file_content(),
 															self.start_urls, self.url_map, self.urls_to_visit)
 
+	# Here we override the method make_requests_from_url to use the one from the UrlHelper instead of the one in
+	# scrapy.Spider
 	def make_requests_from_url(self, url):
 		return UrlHelper.make_requests_from_url(url)
 
 	def parse(self, response):
-
+		# Here we're in the method that performs the scraping. Below an xpath expression extracts the
+		# number of followers from the element with attribute data-nav equal to "followers"
 		followers_count = response.xpath('//*[@data-nav="followers"]/@title').re("[\d,]*")[0].replace(',', '')
 
 		self.csv_helper.write_row_to_output_file(

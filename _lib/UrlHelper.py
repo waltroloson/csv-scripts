@@ -5,10 +5,10 @@ import scrapy
 __author__ = 'Jacek Aleksander Gruca'
 
 
-# This class represents the spider which will be run by Scrapy to scrape the number of likes from pages.
+# This class provides URL processing functions to code in which we want to abstract this processing out.
 class UrlHelper(object):
-	# This method is the constructor of the scraper helper. It takes in the names of the input and output files
-	# and performs some pre-processing of URLs.
+
+	# Construct URL helper and assign the prefix of the URLs.
 	def __init__(self, prefix):
 		self.prefix = prefix
 
@@ -19,14 +19,15 @@ class UrlHelper(object):
 		# and is typically used to convert urls to requests.
 		return scrapy.Request(url, dont_filter=True, meta={'start_url': url})
 
+	# Populate the map of URLs-to-handles and the list of URLs.
 	def process_urls(self, handles, url_map, urls_to_visit):
-		# Populate the map of URLs-to-handles and the list of URLs.
 		for line in handles:
 			handle_url = self.prefix + urllib2.quote(line.strip())
 			url_map[handle_url] = line.strip()
 			urls_to_visit.append(handle_url)
 
+	# Perform regular processing and specify that the first URL to be scraped corresponds to the first item read from
+	# the input file.
 	def process_urls_for_scrapy(self, handles, start_urls, url_map, urls_to_visit):
 		self.process_urls(handles, url_map, urls_to_visit)
-		# Specify that the first URL to be scraped corresponds to the first handle read from the input file.
 		start_urls.append(urls_to_visit.pop(0))
