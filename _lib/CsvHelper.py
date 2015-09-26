@@ -3,6 +3,7 @@ import csv
 
 __author__ = 'Jacek Aleksander Gruca'
 
+
 # This class provides CSV processing functions to code in which we want to abstract this processing out.
 class CsvHelper(object):
 	def __init__(self, field_names, input_file, output_file):
