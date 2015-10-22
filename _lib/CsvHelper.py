@@ -1,5 +1,6 @@
 import os
 import csv
+import re
 
 __author__ = 'Jacek Aleksander Gruca'
 
@@ -35,8 +36,8 @@ class CsvHelper(object):
 			self.csv_writer = csv.DictWriter(csvfile, self.field_names)
 			self.csv_writer.writeheader()
 
-	# Read input file into memory and return as a set of lines.
+	# Read input file into memory and return as a set of lines, excluding empty lines.
 	def get_input_file_content(self):
 		with open(self.input_file) as f:
 			file_content = f.read()
-		return file_content.split('\n')
+		return filter(lambda x: not re.match(r'^\s*$', x), file_content.split('\n'))

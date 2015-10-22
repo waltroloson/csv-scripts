@@ -22,8 +22,12 @@ class UrlHelper(object):
 	# Populate the map of URLs-to-handles and the list of URLs.
 	def process_urls(self, handles, url_map, urls_to_visit):
 		for line in handles:
-			handle_url = self.prefix + urllib2.quote(line.strip())
-			url_map[handle_url] = line.strip()
+			line = line.strip()
+			if "://" not in line:
+				line = urllib2.quote(line)
+			handle_url = self.prefix + line
+			if isinstance(url_map, dict):
+				url_map[handle_url] = line
 			urls_to_visit.append(handle_url)
 
 	# Perform regular processing and specify that the first URL to be scraped corresponds to the first item read from
