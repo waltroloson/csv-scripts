@@ -15,8 +15,7 @@ import constants
 __author__ = 'Jacek Aleksander Gruca'
 
 # The field names of the output CSV file.
-FIELD_NAMES = ['itunes_url', 'timestamp', 'current_rating', 'no_of_current_reviews', 'cumulative_rating',
-					'no_of_all_reviews']
+FIELD_NAMES = ['itunes_url', 'timestamp', 'current_stars', 'current_ratings', 'all_stars', 'all_ratings']
 
 
 # This class represents the spider which will be run by Scrapy to scrape the reviews from iTunes pages.
