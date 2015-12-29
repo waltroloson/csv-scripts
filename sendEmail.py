@@ -1,13 +1,10 @@
 from __future__ import print_function
+import dateutil.parser
 import datetime
-import urllib2
-import json
-import time
 import sys
 import re
 import os
 import csv
-import dateutil.parser
 
 sys.path.append("_lib/")
 from EmailGateway import EmailGateway
@@ -21,26 +18,25 @@ __author__ = 'Jacek Aleksander Gruca'
 FIELD_NAMES = ['handle', 'url', 'timestamp', 'number_of_followers']
 
 
+# Add a row to the appropriate table in the message object.
 def processRow(filename, row, pMessage):
-	table = pMessage.getTable(filename)
-	table.addRow(row)
-	print(table)
+	table = pMessage.get_table(filename)
+	table.add_row(row)
 
 
+# Process the file containing scraped data.
 def processFile(filename, dateRange, pMessage):
+	# Parse the date range to be searched into dFrom and dTo.
 	dFrom = datetime.datetime.strptime(dateRange.split("-")[0], "%Y%m%d").date()
 	dTo = datetime.datetime.strptime(dateRange.split("-")[1], "%Y%m%d").date()
-	print(dFrom)
-	print(dTo)
-	array = {}
 	with open(filename, 'r') as csvfile:
 		fileReader = csv.reader(csvfile, delimiter=',')
-		next(fileReader, None)
+		next(fileReader, None)  # skip the header
 		for row in fileReader:
 			currentDate = dateutil.parser.parse(row[2]).date()
-			print(currentDate)
-			if (currentDate <= dTo and currentDate >= dFrom):
-				processRow(filename, array, row, pMessage)
+			# Only process a row of input if it's in the provided date range.
+			if (currentDate >= dFrom and currentDate <= dTo):
+				processRow(filename, row, pMessage)
 
 
 def print_usage():
@@ -53,21 +49,22 @@ if len(sys.argv) < 4 or sys.argv[1].isdigit() == False or len(sys.argv) != (int(
 	print_usage()
 	exit(0)
 
+# Here we store the number of files specified as input and instantiate the message object which will be sent by the
+# emailGateway object using the Mandrill account specified in the sendEmailConfig file.
 numberOfFiles = int(sys.argv[1])
-
-# print(numberOfFiles)
-
 message = Message()
 emailGateway = EmailGateway()
 
+# Process the input parameters and validate that the input ranges are in a correct format.
 for i in range(numberOfFiles):
 	filename = sys.argv[2 + 2 * i]
 	dateRange = sys.argv[2 + 2 * i + 1]
 	print("Processing file " + filename + " in date range " + dateRange)
 	if (not re.match(r'^\d\d\d\d\d\d\d\d\-\d\d\d\d\d\d\d\d$', dateRange)):
 		print(
-			"Date range " + dateRange + " doesn't match pattern YYYYMMDD-YYYYMMDD. Date ranges are both left and right inclusive.")
+			"Date range " + dateRange + " doesn't match pattern YYYYMMDD-YYYYMMDD."
+												 " Date ranges are both left and right inclusive.")
 		exit(0)
 	processFile(filename, dateRange, message)
 
-emailGateway.sendMessage(message)
+emailGateway.send_message(message)
