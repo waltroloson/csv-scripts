@@ -50,8 +50,8 @@ class Table(object):
 			dates.append(date)
 			identifiers.append(identifier)
 
-		dates = set(dates)
-		identifiers = set(identifiers)
+		dates = sorted(set(dates))
+		identifiers = sorted(set(identifiers))
 
 		html += """<tr><td style="border-style: solid; border-width: 1px; border-color: rgb(219, 219, 219);
 			padding: 10px; margin: 0px; width: 25%">{filename1}</td>""".format(filename1=self.filename)

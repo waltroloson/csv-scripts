@@ -10,22 +10,20 @@ sys.path.append("_lib/")
 from EmailGateway import EmailGateway
 from Message import Message
 from Table import Table
+import sendEmailConfig
 import constants
 
 __author__ = 'Jacek Aleksander Gruca'
 
-# The field names of the output CSV file.
-FIELD_NAMES = ['handle', 'url', 'timestamp', 'number_of_followers']
-
 
 # Add a row to the appropriate table in the message object.
-def processRow(filename, row, pMessage):
-	table = pMessage.get_table(filename)
+def processRow(filename, row, message):
+	table = message.get_table(filename)
 	table.add_row(row)
 
 
 # Process the file containing scraped data.
-def processFile(filename, dateRange, pMessage):
+def processFile(filename, dateRange, message):
 	# Parse the date range to be searched into dFrom and dTo.
 	dFrom = datetime.datetime.strptime(dateRange.split("-")[0], "%Y%m%d").date()
 	dTo = datetime.datetime.strptime(dateRange.split("-")[1], "%Y%m%d").date()
@@ -36,7 +34,7 @@ def processFile(filename, dateRange, pMessage):
 			currentDate = dateutil.parser.parse(row[2]).date()
 			# Only process a row of input if it's in the provided date range.
 			if (currentDate >= dFrom and currentDate <= dTo):
-				processRow(filename, row, pMessage)
+				processRow(filename, row, message)
 
 
 def print_usage():
@@ -45,12 +43,13 @@ def print_usage():
 
 
 # Here we check that the number of input parameters is even and equal to the number of files specified as input
-if len(sys.argv) < 4 or sys.argv[1].isdigit() == False or len(sys.argv) != (int(sys.argv[1]) + 1) * 2:
+if len(sys.argv) < 4 or sys.argv[1].isdigit() == False or len(sys.argv) != 2 + int(sys.argv[1]) * 2:
 	print_usage()
 	exit(0)
 
-# Here we store the number of files specified as input and instantiate the message object which will be sent by the
-# emailGateway object using the Mandrill account specified in the sendEmailConfig file.
+# Here we store the number of files specified as input in the numberOfFiles variable and instantiate the message
+# object which will be sent by the emailGateway object using the Mandrill account specified in the sendEmailConfig
+# file.
 numberOfFiles = int(sys.argv[1])
 message = Message()
 emailGateway = EmailGateway()
@@ -59,7 +58,7 @@ emailGateway = EmailGateway()
 for i in range(numberOfFiles):
 	filename = sys.argv[2 + 2 * i]
 	dateRange = sys.argv[2 + 2 * i + 1]
-	print("Processing file " + filename + " in date range " + dateRange)
+	print("Processing file " + filename + " in date range " + dateRange + ".")
 	if (not re.match(r'^\d\d\d\d\d\d\d\d\-\d\d\d\d\d\d\d\d$', dateRange)):
 		print(
 			"Date range " + dateRange + " doesn't match pattern YYYYMMDD-YYYYMMDD."
@@ -67,4 +66,9 @@ for i in range(numberOfFiles):
 		exit(0)
 	processFile(filename, dateRange, message)
 
-emailGateway.send_message(message)
+if sendEmailConfig.DEV:
+	f = open('myfile.html', 'w')
+	print(message.print_message(), file=f)
+
+if sendEmailConfig.SEND_EMAIL:
+	emailGateway.send_message(message)

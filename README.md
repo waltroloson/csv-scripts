@@ -26,7 +26,7 @@ python scrapeTwitterPhrase.py input/twitterSearch.csv output/phrasetweets.csv
 
 ##### To send a scraping report via Mandrill
 
-Edit the file sendEmailConfig.py by specifying email sending confguration.
+Edit the file sendEmailConfig.py specifying email sending confguration.
 
 Run the sendEmail.py script in the following way:
 
