@@ -4,21 +4,23 @@ import sendEmailConfig
 __author__ = 'Jacek Aleksander Gruca'
 
 header = """
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!DOCTYPE HTML>
 <html>
 <head>
 <META http-equiv="Content-Type" content="text/html; charset=utf-8">
-<STYLE TYPE="text/css"> <!-- BODY {{ font-family:sans-serif; }} --> </STYLE>
+<STYLE TYPE="text/css"> <!-- BODY {{ font-family:sans-serif; }}
+	.cell {{ border-style: solid; border-width: 1px; border-color: rgb(219, 219, 219);
+			padding: 10px; margin: 0px; width: 25%; }}
+	.strong {{ font-weight: bold; font-size: 12px; }} --> </STYLE>
 </head>
 <body>
 	<div style="word-wrap: break-word">
 		<div>
 			<div
-				style="color: rgb(0, 0, 0); letter-spacing: normal; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; word-spacing: 0px; word-wrap: break-word">
-				<div
-					style="color: rgb(0, 0, 0); letter-spacing: normal; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; word-spacing: 0px; word-wrap: break-word">
+			style="color: rgb(0, 0, 0); letter-spacing: normal; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; word-spacing: 0px;">
+				<div>
 					<div
-						style="color: rgb(0, 0, 0); font-family: Helvetica; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; word-spacing: 0px; font-size: 13px">
+					style="font-family: Helvetica; font-style: normal; font-variant: normal; font-weight: normal; line-height: normal; font-size: 13px">
 						<br>
 						<br>
 						<br>
@@ -59,9 +61,9 @@ class Message(object):
 		self.tables = {}
 
 	# Return the table corresponding to the appropriate input file. If the table has not yet been instantiated, create
-	# it and store in the tables variable and return it.
+	# it, store in the tables variable and return it.
 	def get_table(self, filename):
-		if (filename in self.tables):
+		if filename in self.tables:
 			return self.tables[filename]
 		else:
 			self.tables[filename] = Table(filename)
