@@ -53,17 +53,20 @@ class Table(object):
 		dates = sorted(set(dates))
 		identifiers = sorted(set(identifiers))
 
-		html += """<tr><td class="cell strong">{filename1}</td>""".format(
-			filename1=self.filename)
+		style = """border-style: solid; border-width: 1px; border-color: rgb(219, 219, 219);
+			padding: 10px; margin: 0px;"""
+		style_strong = style + " font-weight: bold; font-size: 12px;"
+
+		html += """<tr><td style="{style1}">{filename1}</td>""".format(filename1=self.filename, style1=style_strong)
 		for identifier in identifiers:
-			html += """<td class="cell">{identifier1}</td>""".format(identifier1=identifier)
+			html += """<td style="{style1}">{identifier1}</td>""".format(identifier1=identifier, style1=style)
 		html += "</tr>"
 
 		for date in dates:
-			html += """<tr><td class="cell">{date1}</td>""".format(date1=date)
+			html += """<tr><td style="{style1}">{date1}</td>""".format(date1=date, style1=style)
 			for identifier in identifiers:
-				html += """<td class="cell">{value1}</td>""". \
-					format(value1=self.map[date, identifier] if (date, identifier) in self.map else "")
+				html += """<td style="{style1}">{value1}</td>""". \
+					format(value1=self.map[date, identifier] if (date, identifier) in self.map else "", style1=style)
 			html += "<tr/>"
 
 		return html + footer

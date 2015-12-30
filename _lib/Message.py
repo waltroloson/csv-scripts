@@ -8,10 +8,7 @@ header = """
 <html>
 <head>
 <META http-equiv="Content-Type" content="text/html; charset=utf-8">
-<STYLE TYPE="text/css"> <!-- BODY {{ font-family:sans-serif; }}
-	.cell {{ border-style: solid; border-width: 1px; border-color: rgb(219, 219, 219);
-			padding: 10px; margin: 0px; width: 25%; }}
-	.strong {{ font-weight: bold; font-size: 12px; }} --> </STYLE>
+<STYLE TYPE="text/css"> <!-- BODY {{ font-family:sans-serif; }} --> </STYLE>
 </head>
 <body>
 	<div style="word-wrap: break-word">
